@@ -1,7 +1,7 @@
 
 --this function creates and sets username account number for user
 --creates unique username and account number using datetime
---and sets the accounts balance to 0
+--and creates balance for account in latest balance table
 --and hashes the pass
 CREATE FUNCTION complete_fields()
 RETURNS TRIGGER
@@ -24,8 +24,10 @@ BEGIN
     SET account.username = username, account.account_number = account_number,
     --hash the password
     password = sha256(password),
-    account.balance = 0.00
     WHERE account.username IS NULL;
+
+    --insert balance for account
+    INSERT INTO latest_balance(account_number, amount) VALUES (NEW.account_number, 0.00);
 
     RETURN NEW;
 END
@@ -34,4 +36,4 @@ $$ LANGUAGE plpgsql;
 
 --run the complete fields function after inserting each row to account
 CREATE TRIGGER account_insertion AFTER INSERT ON account
-FOR EACH ROW EXECUTE PROCEDURE complete_fields()
+FOR EACH ROW EXECUTE PROCEDURE complete_fields();
