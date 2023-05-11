@@ -21,7 +21,14 @@ CREATE TABLE IF NOT EXISTS transactions(
 		transaction_time TIMESTAMP NOT NULL,
 		from_account CHAR(16),
 		to_account CHAR(16),
-		amount NUMERIC (16,2) NOT NULL)
+		amount NUMERIC (16,2) NOT NULL,
+		CONSTRAINT type_check CHECK(
+		((type = 'deposit' OR type = 'interest') AND from_account IS NULL AND to_account IS NOT NULL)
+		AND
+		(type = 'withdraw' AND from_account IS NOT NULL AND to_account IS NULL)
+		AND
+		(type = 'transfer' AND from_account IS NOT NULL AND to_account IS NOT NULL)
+		))
 
 CREATE TABLE IF NOT EXISTS latest_balance(
 		account_number CHAR(16) REFERENCES account(account_number),
