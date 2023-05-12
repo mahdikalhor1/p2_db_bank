@@ -1,21 +1,11 @@
 CREATE PROCEDURE deposit(amount numeric(16,2), INOUT message VARCHAR(100))
 AS $$
-DECLARE username VARCHAR(20);
 DECLARE account_number CHAR(16);
 
 BEGIN
 
-    --get username of the latest login
-    SELECT l.username INTO username
-    FROM login_log AS l
-    WHERE l.login_time = (
-        SELECT MAX(login_time)
-        FROM login_log);
-
-    --get account number of the username
-    SELECT a.account_number INTO account_number
-    FROM account AS a
-    WHERE a.username = username;
+    --get account number of current user
+    CALL get_current_user(account_number);
 
     INSERT INTO transactions(
 		type,
@@ -36,17 +26,8 @@ DECLARE account_number CHAR(16);
 
 BEGIN
 
-    --get username of the latest login
-    SELECT l.username INTO username
-    FROM login_log AS l
-    WHERE l.login_time = (
-        SELECT MAX(login_time)
-        FROM login_log);
-
-    --get account number of the username
-    SELECT a.account_number INTO account_number
-    FROM account AS a
-    WHERE a.username = username;
+    --get account number of current user
+    CALL get_current_user(account_number);
 
     INSERT INTO transactions(
 		type,
@@ -67,17 +48,8 @@ DECLARE account_number CHAR(16);
 DECLARE to_account CHAR(16);
 BEGIN
 
-    --get username of the latest login
-    SELECT l.username INTO username
-    FROM login_log AS l
-    WHERE l.login_time = (
-        SELECT MAX(login_time)
-        FROM login_log);
-
-    --get account number of the username
-    SELECT a.account_number INTO account_number
-    FROM account AS a
-    WHERE a.username = username;
+    --get account number of current user
+    CALL get_current_user(account_number);
 
     --get account number of destination account
     SELECT a.account_number INTO to_account
@@ -110,17 +82,8 @@ DECLARE account_number CHAR(16);
 DECLARE interest_rate
 BEGIN
 
-    --get username of the latest login
-    SELECT l.username INTO username
-    FROM login_log AS l
-    WHERE l.login_time = (
-        SELECT MAX(login_time)
-        FROM login_log);
-
-    --get account number and interest rate of the user
-    SELECT a.account_number INTO account_number, l.interest_rate INTO interest_rate
-    FROM account AS a
-    WHERE a.username = username;
+    --get account number of current user
+    CALL get_current_user(account_number);
 
     INSERT INTO transactions(
 		type,
