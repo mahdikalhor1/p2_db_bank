@@ -87,3 +87,20 @@ AS $$
 		snapshot_time) VALUES (NOW());
     END
 $$ LANGUAGE plpgsql;
+
+
+CREATE PROCEDURE check_balance(INOUT curr_balance NUMERIC(16,2))
+AS $$
+
+DECLARE account_number CHAR(16);
+
+    BEGIN
+
+    CALL get_current_user(account_number);
+
+    SELECT amount INTO curr_balance
+    FROM latest_balance
+    WHERE account_number = account_number;
+    END
+
+$$ LANGUAGE plpgsql;
