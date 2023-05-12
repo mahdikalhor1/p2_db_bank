@@ -1,7 +1,7 @@
     --registers new users
     CREATE PROCEDURE register(password VARCHAR(50) ,first_name VARCHAR(20),
        last_name VARCHAR(20), national_id CHAR(10), date_of_birth DATE,
-       type VARCHAR(8), interest_rate INT, INOUT message VARCHAR(100))
+       type VARCHAR(8), interest_rate NUMERIC(2,2), INOUT message VARCHAR(100))
        AS $$
        DECLARE age int;
        DECLARE username VARCHAR(20);

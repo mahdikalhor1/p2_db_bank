@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS account(
 	national_id CHAR(10) NOT NULL,
 	date_of_birth DATE NOT NULL,
 	type VARCHAR(8) CHECK (type IN ('client', 'employee')),
-	interest_rate INT CHECK (interest_rate IN (0, 1 , 2 , 3 , 4 , 5))
+	interest_rate NUMERIC(2,2)
 )
 
 CREATE TABLE IF NOT EXISTS login_log(
