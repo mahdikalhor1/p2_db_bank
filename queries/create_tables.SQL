@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS account(
 	username VARCHAR(20) PRIMARY KEY,
 	account_number CHAR(16) UNIQUE,
-	password VARCHAR(50) NOT NULL,
+	password VARCHAR(500) NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
 	last_name VARCHAR(20) NOT NULL,
 	national_id CHAR(10) NOT NULL,
