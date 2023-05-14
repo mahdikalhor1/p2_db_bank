@@ -1,6 +1,7 @@
 # this file runs all queries of the queries folder
 import psycopg2
 
+
 def run_queries():
     conn = psycopg2.connect(
         database="bank_db", user='postgres', password='postgres', host='127.0.0.1', port='5432'
@@ -9,6 +10,18 @@ def run_queries():
     cur = conn.cursor()
     queries = []
 
+    # check that queries are executed or not
+
+    cur.execute("""SELECT EXISTS (
+   SELECT FROM pg_tables
+   WHERE  tablename = 'account'
+    );""")
+
+    # return if queries were ran
+    if cur.fetchone()[0]:
+        return
+
+    # fetch queries
     with open('./../queries/create_tables.SQL', 'r') as file:
         create_tables = file.read()
         queries.append(create_tables)
@@ -33,6 +46,7 @@ def run_queries():
         transactions = file.read()
         queries.append(transactions)
 
+    # run queries
     for query in queries:
         cur.execute(query)
 
