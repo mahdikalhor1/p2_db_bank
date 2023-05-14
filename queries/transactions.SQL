@@ -79,7 +79,7 @@ CREATE PROCEDURE interest_payment(INOUT message VARCHAR(100))
 AS $$
 DECLARE username VARCHAR(20);
 DECLARE account_number CHAR(16);
-DECLARE interest_rate
+DECLARE interest_rate NUMERIC(2,2);
 BEGIN
 
     --get account number of current user

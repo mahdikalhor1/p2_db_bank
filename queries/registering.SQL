@@ -1,8 +1,11 @@
+
+    CREATE EXTENSION pgcrypto;
+
     --registers new users
     CREATE PROCEDURE register(password VARCHAR(500) ,first_name VARCHAR(20),
        last_name VARCHAR(20), national_id CHAR(10), date_of_birth DATE,
        type VARCHAR(8), interest_rate NUMERIC(2,2), INOUT message VARCHAR(100)
-       ,INOUT DECLARE username VARCHAR(20))
+       ,INOUT username VARCHAR(20))
        AS $$
        DECLARE age int;
        DECLARE account_number CHAR(16);
