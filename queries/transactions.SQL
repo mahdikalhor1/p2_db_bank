@@ -12,9 +12,9 @@ BEGIN
 		transaction_time,
 		from_account,
 		to_account,
-		amount) VALUES ('deposit', NOW(), NULL, account_number, amount);
-		message := 'Deposit transaction done\n' || 'amount : ' ||
-		    cast(amount AS VARCHAR (16)) || '\nto ' || account_number;
+		amount) VALUES ('deposit' , NOW(), NULL, account_number, amount);
+		message := 'Deposit transaction done ' || '| amount : ' ||
+		    cast(amount AS VARCHAR (16)) || ' | to ' || account_number;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -35,8 +35,8 @@ BEGIN
 		from_account,
 		to_account,
 		amount) VALUES ('withdraw', NOW(), account_number, NULL, amount);
-		message := 'Withdraw transaction done\n' || 'amount : ' ||
-		    cast(amount AS VARCHAR (16)) || '\nfrom ' || account_number;
+		message := 'Withdraw transaction done |' || ' amount : ' ||
+		    cast(amount AS VARCHAR (16)) || ' | from ' || account_number;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -64,10 +64,10 @@ BEGIN
 		transaction_time,
 		from_account,
 		to_account,
-		amount) VALUES ('Transfer', NOW(), account_number, to_account, amount);
-		message := 'Transfer transaction done\n' || 'amount : ' ||
-		    cast(amount AS VARCHAR (16)) || '\nfrom ' || account_number
-		    || '\nto ' || to_account;
+		amount) VALUES ('transfer', NOW(), account_number, to_account, amount);
+		message := 'Transfer transaction done | ' || 'amount : ' ||
+		    cast(amount AS VARCHAR (16)) || ' | from ' || account_number
+		    || ' | to ' || to_account;
     ELSE
         message :='transaction failed! There is no account with username : ' || to_username;
     END IF;
@@ -78,20 +78,25 @@ $$ LANGUAGE plpgsql;
 CREATE PROCEDURE interest_payment(INOUT message VARCHAR(100))
 AS $$
 DECLARE username VARCHAR(20);
-DECLARE account_number CHAR(16);
-DECLARE interest_rate NUMERIC(2,2);
+DECLARE curr_account_number CHAR(16);
+DECLARE curr_interest_rate NUMERIC(2,2);
 BEGIN
 
     --get account number of current user
-    CALL get_current_user(account_number);
+    CALL get_current_user(curr_account_number);
+
+    SELECT interest_rate INTO curr_interest_rate
+    FROM account
+    WHERE account_number = curr_account_number;
 
     INSERT INTO transactions(
 		type,
 		transaction_time,
 		from_account,
 		to_account,
-		amount) VALUES ('deposit', NOW(), NULL, account_number, interest_rate);
-		message := 'Interest payment done\n' || 'rate : ' ||
-		    cast(amount AS VARCHAR (16)) || '\nto ' || account_number;
+		amount) VALUES ('interest', NOW(), NULL, curr_account_number, curr_interest_rate);
+
+	message := 'Interest payment done | ' || 'rate : ' ||
+		    cast(curr_interest_rate AS VARCHAR (2)) || ' | to ' || curr_account_number;
 END;
 $$ LANGUAGE plpgsql;
