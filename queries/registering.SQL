@@ -33,26 +33,28 @@ $$ LANGUAGE plpgsql;
 --login to account
 --gets username and password
 --and adds log to the login loges in successful logging in
-CREATE PROCEDURE login(username VARCHAR(20), password VARCHAR(50),
+CREATE PROCEDURE login(input_username VARCHAR(20), password VARCHAR(50),
  INOUT message VARCHAR(100))
 AS $$
-DECLARE correct_pass VARCHAR(50);
+DECLARE correct_pass VARCHAR(500);
+DECLARE input_pass VARCHAR(500);
 
     BEGIN
     SELECT a.password into correct_pass
     FROM account AS a
-    WHERE a.username = username;
+    WHERE a.username = input_username;
+    input_pass = digest(password, 'sha256');
 
     CASE
 
         WHEN correct_pass IS NULL THEN
-            message := 'Invalid username. account with username ' || username || ' not found!';
-        WHEN correct_pass <> digest(password, 'sha256') THEN
+            message := 'Invalid username. account with username ' || input_username || ' not found!';
+        WHEN correct_pass <> input_pass THEN
          message := 'Incorrect password!';
         ELSE
             INSERT INTO login_log(
 		    username ,
-		    login_time) VALUES (username, NOW());
+		    login_time) VALUES (input_username, NOW());
             message := 'Logged in successfully.';
     END CASE;
 END;

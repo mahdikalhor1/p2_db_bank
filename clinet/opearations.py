@@ -28,3 +28,19 @@ def signup():
     result = cur.fetchone()
     print(result[0] + "\nusername: "+result[1])
 
+def login():
+
+    username = input("Enter your username:")
+    password = input("password:")
+
+    message = " "
+
+    cur.execute("""CALL login(%s::VARCHAR(20), %s::VARCHAR(50),
+    %s::VARCHAR(100))""", [username, password, message])
+
+    conn.commit()
+
+    print(cur.fetchone()[0])
+
+# signup()
+login()
