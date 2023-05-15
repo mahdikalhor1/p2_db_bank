@@ -4,7 +4,7 @@
     --registers new users
     CREATE PROCEDURE register(password VARCHAR(500) ,first_name VARCHAR(20),
        last_name VARCHAR(20), national_id CHAR(10), date_of_birth DATE,
-       type VARCHAR(8), interest_rate NUMERIC(2,2), INOUT message VARCHAR(100)
+       account_type VARCHAR(8), interest_rate NUMERIC(2,2), INOUT message VARCHAR(100)
        ,INOUT username VARCHAR(20))
        AS $$
        DECLARE age int;
@@ -22,7 +22,7 @@
 	username, account_number, password, first_name, last_name, national_id,
 	date_of_birth, type, interest_rate)
 	VALUES (username, account_number, digest(password, 'sha256'), first_name, last_name,
-	national_id, date_of_birth, type, interest_rate);
+	national_id, date_of_birth, account_type, interest_rate);
 	    message := 'account created successfully.';
        END IF;
     END;
