@@ -7,7 +7,7 @@ RETURNS TRIGGER
 BEGIN
     --set interest rate of employees to zero
     UPDATE account
-    SET insert_rate = 0
+    SET interest_rate = 0
     WHERE username = NEW.username and type = 'employee';
 
     --insert balance for account

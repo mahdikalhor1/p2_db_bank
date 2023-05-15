@@ -1,10 +1,13 @@
+
+    CREATE EXTENSION pgcrypto;
+
     --registers new users
-    CREATE PROCEDURE register(password VARCHAR(50) ,first_name VARCHAR(20),
+    CREATE PROCEDURE register(password VARCHAR(500) ,first_name VARCHAR(20),
        last_name VARCHAR(20), national_id CHAR(10), date_of_birth DATE,
-       type VARCHAR(8), interest_rate NUMERIC(2,2), INOUT message VARCHAR(100))
+       account_type VARCHAR(8), interest_rate NUMERIC(2,2), INOUT message VARCHAR(100)
+       ,INOUT username VARCHAR(20))
        AS $$
        DECLARE age int;
-       DECLARE username VARCHAR(20);
        DECLARE account_number CHAR(16);
        BEGIN
 
@@ -18,8 +21,8 @@
             INSERT INTO account(
 	username, account_number, password, first_name, last_name, national_id,
 	date_of_birth, type, interest_rate)
-	VALUES (username, account_number, sha256(password), first_name, last_name,
-	national_id, date_of_birth, type, interest_rate);
+	VALUES (username, account_number, digest(password, 'sha256'), first_name, last_name,
+	national_id, date_of_birth, account_type, interest_rate);
 	    message := 'account created successfully.';
        END IF;
     END;
@@ -44,7 +47,7 @@ DECLARE correct_pass VARCHAR(50);
 
         WHEN correct_pass IS NULL THEN
             message := 'Invalid username. account with username ' || username || ' not found!';
-        WHEN correct_pass <> sha256(password) THEN
+        WHEN correct_pass <> digest(password, 'sha256') THEN
          message := 'Incorrect password!';
         ELSE
             INSERT INTO login_log(
