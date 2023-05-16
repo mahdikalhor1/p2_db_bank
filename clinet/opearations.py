@@ -1,12 +1,11 @@
 from connection import Connection
 
-
 connection = Connection()
 conn = connection.conn
 cur = connection.cur
 
-def signup():
 
+def signup():
     first_name = input("Enter Your first name:")
     last_name = input("Last name:")
     national_id = input("National ID:")
@@ -22,14 +21,14 @@ def signup():
        %s::VARCHAR(20), %s::CHAR(10), %s::DATE,
        %s::VARCHAR(8), %s::NUMERIC(2,2), %s::VARCHAR(100),
         %s::VARCHAR(20));""", [password, first_name, last_name, national_id,
-                                   date_of_birth, account_type, interest_rate, message,username])
+                               date_of_birth, account_type, interest_rate, message, username])
 
     conn.commit()
     result = cur.fetchone()
-    print(result[0] + "\nusername: "+result[1])
+    print(result[0] + "\nusername: " + result[1])
+
 
 def login():
-
     username = input("Enter your username:")
     password = input("password:")
 
@@ -42,8 +41,8 @@ def login():
 
     print(cur.fetchone()[0])
 
-def deposit():
 
+def deposit():
     try:
         amount = float(input("Enter amount of deposit:"))
         message = ''
@@ -59,7 +58,6 @@ def deposit():
 
 
 def withdraw():
-
     try:
         amount = float(input("Enter amount of withdraw:"))
         message = ''
@@ -73,8 +71,8 @@ def withdraw():
     except ValueError:
         print("you must enter numeric value!")
 
-def transfer():
 
+def transfer():
     try:
         amount = float(input("Enter amount of transfer:"))
         username = input("To username:")
@@ -90,8 +88,8 @@ def transfer():
     except ValueError:
         print("you must enter numeric value!")
 
-def interest_payment():
 
+def interest_payment():
     try:
         input('Press an enter to pay interest.')
         message = ''
@@ -105,8 +103,36 @@ def interest_payment():
     except ValueError:
         print("you must enter numeric value!")
 
+
+def update_balance():
+    try:
+        input('Press an enter to update balances.')
+        cur.execute("""CALL update_balance()""", )
+
+        conn.commit()
+
+        print('balances updated.')
+
+    except ValueError:
+        print("you must enter numeric value!")
+
+
+def check_balance():
+
+    input("Press enter to get your balance.")
+
+    balance = 0
+    cur.execute("""CALL check_balance(%s::NUMERIC(16,2));""", [balance])
+    conn.commit()
+
+    balance = cur.fetchone()[0]
+
+    print("Your balance is :", balance)
+
 # signup()
 # login()
-
+# deposit()
 # transfer()
 # interest_payment()
+# update_balance()
+check_balance()

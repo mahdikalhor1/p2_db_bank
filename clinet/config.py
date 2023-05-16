@@ -46,6 +46,9 @@ def run_queries():
         transactions = file.read()
         queries.append(transactions)
 
+    # make the first snapshot
+    cur.execute("CALL make_snapshot();")
+
     # run queries
     for query in queries:
         cur.execute(query)
